@@ -24,6 +24,7 @@ export const baseConfig = [
       globals: {
         ...globals.node,
         ...globals.es2022,
+        process: 'readonly',
       },
     },
     plugins: {
@@ -56,6 +57,8 @@ export const reactConfig = [
       globals: {
         ...globals.browser,
         ...globals.es2022,
+        process: 'readonly',
+        React: 'readonly',
       },
     },
     plugins: {

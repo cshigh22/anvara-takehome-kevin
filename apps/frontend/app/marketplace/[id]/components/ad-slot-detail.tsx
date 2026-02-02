@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { getAdSlot } from '@/lib/api';
+import { logger } from '@/lib/utils';
 import { authClient } from '@/auth-client';
 
 interface AdSlot {
@@ -138,7 +139,7 @@ export function AdSlotDetail({ id }: Props) {
       setAdSlot({ ...adSlot, isAvailable: true });
       setMessage('');
     } catch (err) {
-      console.error('Failed to unbook:', err);
+      logger.error('Failed to unbook:', err);
     }
   };
 

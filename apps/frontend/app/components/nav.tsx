@@ -22,9 +22,12 @@ export function Nav() {
         .then((data) => setRole(data.role))
         .catch(() => setRole(null));
     } else {
-      setRole(null);
+      // Only set role to null if it's not already null to avoid unnecessary re-renders
+      if (role !== null) {
+        setRole(null); // eslint-disable-line react-hooks/set-state-in-effect
+      }
     }
-  }, [user?.id]);
+  }, [user?.id]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // TODO: Add active link styling using usePathname() from next/navigation
   // The current page's link should be highlighted differently

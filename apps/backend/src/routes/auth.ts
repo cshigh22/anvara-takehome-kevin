@@ -24,7 +24,7 @@ router.get('/me', async (req: Request, res: Response) => {
 
 // GET /api/auth/role/:userId - Get user role based on Sponsor/Publisher records
 router.get('/role/:userId', async (req: Request, res: Response) => {
-  try    const userId = getParam(req.params.userId);
+  try {    const userId = getParam(req.params.userId);
 
     // Check if user is a sponsor
     const sponsor = await prisma.sponsor.findUnique({

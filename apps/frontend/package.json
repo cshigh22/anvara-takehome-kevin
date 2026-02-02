@@ -7,7 +7,7 @@
     "dev": "dotenv -e ../../.env -- next dev -p 3847",
     "build": "next build",
     "start": "next start -p 3847",
-    "lint": "eslint .",
+    "lint": "pwd && eslint .",
     "format": "prettier --write .",
     "test": "vitest",
     "test:ui": "vitest --ui",
