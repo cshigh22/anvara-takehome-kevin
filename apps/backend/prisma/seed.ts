@@ -1,5 +1,5 @@
 // Seed script for populating the database with sample data
-import { PrismaClient } from '../src/generated/prisma/client.js';
+import { PrismaClient, type AdSlotType } from '../src/generated/prisma/client.js';
 import { PrismaPg } from '@prisma/adapter-pg';
 import { hashPassword } from 'better-auth/crypto';
 import pg from 'pg';
@@ -16,9 +16,9 @@ const prisma = new PrismaClient({ adapter });
 async function createBetterAuthTables(client: pg.PoolClient) {
   console.log('Creating Better Auth tables...');
 
-  // Create user table
+  // Use "users" (not "user") to avoid PostgreSQL reserved keyword - must match auth.ts user.modelName
   await client.query(`
-    CREATE TABLE IF NOT EXISTS "user" (
+    CREATE TABLE IF NOT EXISTS users (
       id TEXT PRIMARY KEY,
       name TEXT NOT NULL,
       email TEXT NOT NULL UNIQUE,
@@ -29,11 +29,10 @@ async function createBetterAuthTables(client: pg.PoolClient) {
     )
   `);
 
-  // Create session table
   await client.query(`
-    CREATE TABLE IF NOT EXISTS "session" (
+    CREATE TABLE IF NOT EXISTS sessions (
       id TEXT PRIMARY KEY,
-      "userId" TEXT NOT NULL REFERENCES "user"(id) ON DELETE CASCADE,
+      "userId" TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
       token TEXT NOT NULL UNIQUE,
       "expiresAt" TIMESTAMP NOT NULL,
       "ipAddress" TEXT,
@@ -43,11 +42,10 @@ async function createBetterAuthTables(client: pg.PoolClient) {
     )
   `);
 
-  // Create account table
   await client.query(`
-    CREATE TABLE IF NOT EXISTS "account" (
+    CREATE TABLE IF NOT EXISTS accounts (
       id TEXT PRIMARY KEY,
-      "userId" TEXT NOT NULL REFERENCES "user"(id) ON DELETE CASCADE,
+      "userId" TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
       "accountId" TEXT NOT NULL,
       "providerId" TEXT NOT NULL,
       "accessToken" TEXT,
@@ -60,9 +58,8 @@ async function createBetterAuthTables(client: pg.PoolClient) {
     )
   `);
 
-  // Create verification table
   await client.query(`
-    CREATE TABLE IF NOT EXISTS "verification" (
+    CREATE TABLE IF NOT EXISTS verifications (
       id TEXT PRIMARY KEY,
       identifier TEXT NOT NULL,
       value TEXT NOT NULL,
@@ -85,11 +82,11 @@ async function seedBetterAuthUsers() {
     // Create tables first (if they don't exist)
     await createBetterAuthTables(client);
 
-    // Clean existing auth data
-    await client.query('DELETE FROM "session"');
-    await client.query('DELETE FROM "account"');
-    await client.query('DELETE FROM "verification"');
-    await client.query('DELETE FROM "user"');
+    // Clean existing auth data (table names match auth.ts modelName)
+    await client.query('DELETE FROM sessions');
+    await client.query('DELETE FROM accounts');
+    await client.query('DELETE FROM verifications');
+    await client.query('DELETE FROM users');
 
     const now = new Date().toISOString();
     const hashedPassword = await hashPassword('password');
@@ -97,14 +94,14 @@ async function seedBetterAuthUsers() {
     // Create sponsor user with a fixed ID so we can link it
     const sponsorUserId = crypto.randomUUID();
     await client.query(
-      `INSERT INTO "user" (id, name, email, "emailVerified", image, "createdAt", "updatedAt")
+      `INSERT INTO users (id, name, email, "emailVerified", image, "createdAt", "updatedAt")
        VALUES ($1, $2, $3, $4, $5, $6, $7)
        RETURNING id`,
       [sponsorUserId, 'Demo Sponsor', 'sponsor@example.com', true, null, now, now]
     );
 
     await client.query(
-      `INSERT INTO "account" (id, "userId", "accountId", "providerId", password, "createdAt", "updatedAt")
+      `INSERT INTO accounts (id, "userId", "accountId", "providerId", password, "createdAt", "updatedAt")
        VALUES ($1, $2, $3, $4, $5, $6, $7)`,
       [crypto.randomUUID(), sponsorUserId, sponsorUserId, 'credential', hashedPassword, now, now]
     );
@@ -113,14 +110,14 @@ async function seedBetterAuthUsers() {
     // Create publisher user with a fixed ID so we can link it
     const publisherUserId = crypto.randomUUID();
     await client.query(
-      `INSERT INTO "user" (id, name, email, "emailVerified", image, "createdAt", "updatedAt")
+      `INSERT INTO users (id, name, email, "emailVerified", image, "createdAt", "updatedAt")
        VALUES ($1, $2, $3, $4, $5, $6, $7)
        RETURNING id`,
       [publisherUserId, 'Demo Publisher', 'publisher@example.com', true, null, now, now]
     );
 
     await client.query(
-      `INSERT INTO "account" (id, "userId", "accountId", "providerId", password, "createdAt", "updatedAt")
+      `INSERT INTO accounts (id, "userId", "accountId", "providerId", password, "createdAt", "updatedAt")
        VALUES ($1, $2, $3, $4, $5, $6, $7)`,
       [
         crypto.randomUUID(),
@@ -447,7 +444,9 @@ async function main() {
   ];
 
   for (const slot of adSlots) {
-    await prisma.adSlot.create({ data: slot });
+    await prisma.adSlot.create({
+      data: { ...slot, type: slot.type as AdSlotType },
+    });
   }
 
   // Create campaigns

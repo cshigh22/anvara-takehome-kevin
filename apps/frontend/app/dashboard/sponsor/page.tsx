@@ -1,6 +1,7 @@
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { auth } from '@/auth';
+import { getCampaigns } from '@/lib/api';
 import { getUserRole } from '@/lib/auth-helpers';
 import { CampaignList } from './components/campaign-list';
 
@@ -13,10 +14,20 @@ export default async function SponsorDashboard() {
     redirect('/login');
   }
 
-  // Verify user has 'sponsor' role
+  // Verify user has 'sponsor' role (from Prisma Sponsor record linked to this user)
   const roleData = await getUserRole(session.user.id);
   if (roleData.role !== 'sponsor') {
     redirect('/');
+  }
+
+  let campaigns: Awaited<ReturnType<typeof getCampaigns>> = [];
+  let error: string | null = null;
+  if (roleData.sponsorId) {
+    try {
+      campaigns = await getCampaigns(roleData.sponsorId);
+    } catch {
+      error = 'Failed to load campaigns';
+    }
   }
 
   return (
@@ -26,7 +37,7 @@ export default async function SponsorDashboard() {
         {/* TODO: Add CreateCampaignButton here */}
       </div>
 
-      <CampaignList />
+      <CampaignList campaigns={campaigns} error={error} />
     </div>
   );
 }

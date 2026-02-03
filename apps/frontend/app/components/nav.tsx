@@ -47,6 +47,15 @@ export function Nav() {
             Marketplace
           </Link>
 
+          {user && (
+            <Link
+              href="/dashboard"
+              className="text-[--color-muted] hover:text-[--color-foreground]"
+            >
+              Dashboard
+            </Link>
+          )}
+
           {user && role === 'sponsor' && (
             <Link
               href="/dashboard/sponsor"

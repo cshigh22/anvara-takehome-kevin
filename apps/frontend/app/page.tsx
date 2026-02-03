@@ -3,7 +3,23 @@
 // TODO: Add hero section, features, testimonials, etc.
 // HINT: Check out the bonus challenge for marketing landing page!
 
-export default function Home() {
+import { headers } from 'next/headers';
+import { redirect } from 'next/navigation';
+import { auth } from '@/auth';
+import { getUserRole } from '@/lib/auth-helpers';
+
+export default async function Home() {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  if (session?.user) {
+    const roleData = await getUserRole(session.user.id);
+    if (roleData.role === 'sponsor' || roleData.role === 'publisher') {
+      redirect('/dashboard');
+    }
+  }
+
   return (
     <div className="flex min-h-[60vh] flex-col items-center justify-center text-center">
       <h1 className="mb-4 text-4xl font-bold">Welcome to Anvara</h1>
