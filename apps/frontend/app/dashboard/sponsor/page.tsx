@@ -17,6 +17,9 @@ export default async function SponsorDashboard() {
   // Verify user has 'sponsor' role (from Prisma Sponsor record linked to this user)
   const roleData = await getUserRole(session.user.id);
   if (roleData.role !== 'sponsor') {
+    if (roleData.role === 'publisher') {
+      redirect('/dashboard/publisher');
+    }
     redirect('/');
   }
 

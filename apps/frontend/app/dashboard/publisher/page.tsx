@@ -1,6 +1,7 @@
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { auth } from '@/auth';
+import { getAdSlots } from '@/lib/api';
 import { getUserRole } from '@/lib/auth-helpers';
 import { AdSlotList } from './components/ad-slot-list';
 
@@ -13,10 +14,23 @@ export default async function PublisherDashboard() {
     redirect('/login');
   }
 
-  // Verify user has 'publisher' role
+  // Verify user has 'publisher' role (from Prisma Publisher record linked to this user)
   const roleData = await getUserRole(session.user.id);
   if (roleData.role !== 'publisher') {
+    if (roleData.role === 'sponsor') {
+      redirect('/dashboard/sponsor');
+    }
     redirect('/');
+  }
+
+  let adSlots: Awaited<ReturnType<typeof getAdSlots>> = [];
+  let error: string | null = null;
+  if (roleData.publisherId) {
+    try {
+      adSlots = await getAdSlots(roleData.publisherId);
+    } catch {
+      error = 'Failed to load ad slots';
+    }
   }
 
   return (
@@ -26,7 +40,7 @@ export default async function PublisherDashboard() {
         {/* TODO: Add CreateAdSlotButton here */}
       </div>
 
-      <AdSlotList />
+      <AdSlotList adSlots={adSlots} error={error} />
     </div>
   );
 }
