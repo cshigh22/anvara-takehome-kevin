@@ -97,16 +97,19 @@ Apply `requireAuth` middleware to these routes:
 curl http://localhost:4291/api/campaigns
 
 # With authentication - should return user's campaigns
+# Get the cookie: log in at /login, then DevTools → Application → Cookies → copy "better-auth.session_token" value
 curl http://localhost:4291/api/campaigns \
-  -H "Cookie: better-auth-session=<session-cookie>"
+  -H "Cookie: better-auth.session_token=<session-token-value>"
 ```
 
 ### 2. Test Authorization
 
 ```bash
 # Try to access another user's campaign - should return 403
-curl http://localhost:4291/api/campaigns/<other-user-campaign-id> \
-  -H "Cookie: better-auth-session=<session-cookie>"
+# Replace OTHER_SPONSOR_CAMPAIGN_ID with a real campaign id from a different sponsor (e.g. from DB or Prisma Studio)
+# Use quotes so the shell doesn't treat < > as redirection
+curl "http://localhost:4291/api/campaigns/OTHER_SPONSOR_CAMPAIGN_ID" \
+  -H "Cookie: better-auth.session_token=YOUR_SESSION_TOKEN_VALUE"
 ```
 
 ### 3. Browser Testing

@@ -27,7 +27,8 @@ export default async function PublisherDashboard() {
   let error: string | null = null;
   if (roleData.publisherId) {
     try {
-      adSlots = await getAdSlots(roleData.publisherId);
+      const cookie = (await headers()).get('cookie') ?? '';
+      adSlots = await getAdSlots(roleData.publisherId, { cookie });
     } catch {
       error = 'Failed to load ad slots';
     }

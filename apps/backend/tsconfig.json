@@ -1,5 +1,5 @@
 {
-  "extends": "@anvara/config/tsconfig.node.json",
+  "extends": "../../packages/config/tsconfig.node.json",
   "compilerOptions": {
     "target": "ES2022",
     "module": "ESNext",
