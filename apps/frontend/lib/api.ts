@@ -35,7 +35,24 @@ export const getCampaign = (id: string, options?: ApiOptions) =>
   api<Campaign>(`/api/campaigns/${id}`, options);
 export const createCampaign = (data: Record<string, unknown>, options?: ApiOptions) =>
   api<Campaign>('/api/campaigns', { method: 'POST', body: JSON.stringify(data), ...options });
-// TODO: Add updateCampaign and deleteCampaign functions
+export const updateCampaign = (id: string, data: Record<string, unknown>, options?: ApiOptions) =>
+  api<Campaign>(`/api/campaigns/${id}`, {
+    method: 'PUT',
+    body: JSON.stringify(data),
+    ...options,
+  });
+export async function deleteCampaign(id: string, options?: ApiOptions): Promise<void> {
+  const { cookie, ...init } = options ?? {};
+  const headers: HeadersInit = { ...(init.headers ?? {}) };
+  if (cookie) (headers as Record<string, string>)['Cookie'] = cookie;
+  const res = await fetch(`${API_URL}/api/campaigns/${id}`, {
+    method: 'DELETE',
+    credentials: 'include',
+    ...init,
+    headers,
+  });
+  if (!res.ok) throw new Error('API request failed');
+}
 
 // Ad Slots (pass options.cookie when calling from server to forward session)
 export const getAdSlots = (publisherId?: string, options?: ApiOptions) =>
@@ -47,7 +64,24 @@ export const getAdSlot = (id: string, options?: ApiOptions) =>
   api<AdSlot>(`/api/ad-slots/${id}`, options);
 export const createAdSlot = (data: Record<string, unknown>, options?: ApiOptions) =>
   api<AdSlot>('/api/ad-slots', { method: 'POST', body: JSON.stringify(data), ...options });
-// TODO: Add updateAdSlot, deleteAdSlot functions
+export const updateAdSlot = (id: string, data: Record<string, unknown>, options?: ApiOptions) =>
+  api<AdSlot>(`/api/ad-slots/${id}`, {
+    method: 'PUT',
+    body: JSON.stringify(data),
+    ...options,
+  });
+export async function deleteAdSlot(id: string, options?: ApiOptions): Promise<void> {
+  const { cookie, ...init } = options ?? {};
+  const headers: HeadersInit = { ...(init.headers ?? {}) };
+  if (cookie) (headers as Record<string, string>)['Cookie'] = cookie;
+  const res = await fetch(`${API_URL}/api/ad-slots/${id}`, {
+    method: 'DELETE',
+    credentials: 'include',
+    ...init,
+    headers,
+  });
+  if (!res.ok) throw new Error('API request failed');
+}
 
 // Placements
 export const getPlacements = () => api<Placement[]>('/api/placements');

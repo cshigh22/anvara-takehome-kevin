@@ -98,6 +98,7 @@ export function AdSlotDetail({ id }: Props) {
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
           body: JSON.stringify({
             sponsorId: roleInfo.sponsorId,
             message: message || undefined,
@@ -128,6 +129,7 @@ export function AdSlotDetail({ id }: Props) {
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
         }
       );
 
