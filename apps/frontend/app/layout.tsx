@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import './globals.css';
+import { Toaster } from 'sonner';
 import { Nav } from './components/nav';
 
 // TODO: Add ErrorBoundary wrapper for graceful error handling
@@ -22,6 +23,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="min-h-screen antialiased">
         <Nav />
         <main className="mx-auto max-w-6xl p-4">{children}</main>
+        <Toaster richColors position="top-right" />
       </body>
     </html>
   );

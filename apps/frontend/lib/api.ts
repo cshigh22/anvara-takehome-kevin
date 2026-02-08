@@ -1,6 +1,4 @@
 // Simple API client
-// FIXME: This client has no error response parsing - when API returns { error: "..." },
-// we should extract and throw that message instead of generic "API request failed"
 
 import type { AdSlot, Campaign, Placement } from './types';
 
@@ -10,6 +8,11 @@ export type ApiOptions = RequestInit & {
   /** Forward cookies when calling from server (e.g. from headers()). */
   cookie?: string;
 };
+
+async function getApiError(res: Response): Promise<string> {
+  const body = await res.json().catch(() => ({}));
+  return (body as { error?: string })?.error ?? 'API request failed';
+}
 
 export async function api<T>(endpoint: string, options?: ApiOptions): Promise<T> {
   const { cookie, ...init } = options ?? {};
@@ -24,7 +27,7 @@ export async function api<T>(endpoint: string, options?: ApiOptions): Promise<T>
     ...init,
     headers,
   });
-  if (!res.ok) throw new Error('API request failed');
+  if (!res.ok) throw new Error(await getApiError(res));
   return res.json();
 }
 
@@ -51,7 +54,7 @@ export async function deleteCampaign(id: string, options?: ApiOptions): Promise<
     ...init,
     headers,
   });
-  if (!res.ok) throw new Error('API request failed');
+  if (!res.ok) throw new Error(await getApiError(res));
 }
 
 // Ad Slots (pass options.cookie when calling from server to forward session)
@@ -80,7 +83,7 @@ export async function deleteAdSlot(id: string, options?: ApiOptions): Promise<vo
     ...init,
     headers,
   });
-  if (!res.ok) throw new Error('API request failed');
+  if (!res.ok) throw new Error(await getApiError(res));
 }
 
 // Placements

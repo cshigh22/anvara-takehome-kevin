@@ -19,7 +19,7 @@ export interface AdSlot {
   id: string;
   name: string;
   description?: string;
-  type: 'DISPLAY' | 'VIDEO' | 'NEWSLETTER' | 'PODCAST';
+  type: 'DISPLAY' | 'VIDEO' | 'NATIVE' | 'NEWSLETTER' | 'PODCAST';
   basePrice: number;
   isAvailable: boolean;
   publisherId: string;
