@@ -61,3 +61,19 @@ body {
  * - text-[--color-foreground] for custom text colors
  * - p-[--spacing-container] for custom spacing
  */
+
+/* Newsletter success state animation */
+@keyframes newsletter-success-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.newsletter-success-animate {
+  animation: newsletter-success-in 0.3s ease-out;
+}

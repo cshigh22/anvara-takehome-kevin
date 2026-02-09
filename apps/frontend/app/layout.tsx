@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 import { Toaster } from 'sonner';
 import { Nav } from './components/nav';
+import { Footer } from './components/footer';
 
 // TODO: Add ErrorBoundary wrapper for graceful error handling
 // TODO: Consider adding a loading.tsx for Suspense boundaries
@@ -20,9 +21,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   // See: https://tanstack.com/query/latest/docs/framework/react/guides/advanced-ssr
   return (
     <html lang="en">
-      <body className="min-h-screen antialiased">
+      <body className="flex min-h-screen flex-col antialiased">
         <Nav />
-        <main className="mx-auto max-w-6xl p-4">{children}</main>
+        <main className="mx-auto w-full max-w-6xl flex-1 p-4">{children}</main>
+        <Footer />
         <Toaster richColors position="top-right" />
       </body>
     </html>

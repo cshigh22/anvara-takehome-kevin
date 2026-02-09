@@ -93,3 +93,25 @@ export const createPlacement = (data: Record<string, unknown>) =>
 
 // Dashboard
 export const getStats = () => api<Record<string, unknown>>('/api/dashboard/stats');
+
+// Newsletter
+export type NewsletterSubscribeResponse = {
+  success: true;
+  message: string;
+};
+
+export type NewsletterSubscribeError = {
+  success: false;
+  error: string;
+};
+
+export async function subscribeNewsletter(
+  email: string,
+  options?: ApiOptions
+): Promise<NewsletterSubscribeResponse> {
+  return api<NewsletterSubscribeResponse>('/api/newsletter/subscribe', {
+    method: 'POST',
+    body: JSON.stringify({ email }),
+    ...options,
+  });
+}
