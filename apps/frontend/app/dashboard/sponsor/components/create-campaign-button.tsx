@@ -21,7 +21,7 @@ export function CreateCampaignButton() {
   useEffect(() => {
     if (state?.success && state !== prevStateRef.current && open) {
       toast.success('Campaign created successfully');
-      closeModal();
+      queueMicrotask(closeModal);
     }
     if (state?.error && state !== prevStateRef.current) {
       toast.error(state.error);

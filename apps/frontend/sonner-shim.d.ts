@@ -1,3 +1,5 @@
+import type { ReactElement } from 'react';
+
 declare module 'sonner' {
   const toast: {
     (message?: string): void;
@@ -5,5 +7,5 @@ declare module 'sonner' {
     error: (message: string) => void;
   };
   export { toast };
-  export function Toaster(props?: { position?: string; richColors?: boolean }): JSX.Element;
+  export function Toaster(props?: { position?: string; richColors?: boolean }): ReactElement;
 }

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { subscribeNewsletter } from '@/lib/api';
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -23,16 +23,14 @@ export function NewsletterSignup({
   description = 'Get the latest sponsorship opportunities and marketplace updates delivered to your inbox.',
 }: NewsletterSignupProps) {
   const [email, setEmail] = useState('');
-  const [status, setStatus] = useState<FormStatus>('idle');
-  const [message, setMessage] = useState('');
-
-  // Show success state if user already subscribed this session
-  useEffect(() => {
-    if (typeof window !== 'undefined' && sessionStorage.getItem(STORAGE_KEY)) {
-      setStatus('success');
-      setMessage('Thanks for subscribing!');
-    }
-  }, []);
+  const [status, setStatus] = useState<FormStatus>(() => {
+    if (typeof window === 'undefined') return 'idle';
+    return sessionStorage.getItem(STORAGE_KEY) ? 'success' : 'idle';
+  });
+  const [message, setMessage] = useState(() => {
+    if (typeof window === 'undefined') return '';
+    return sessionStorage.getItem(STORAGE_KEY) ? 'Thanks for subscribing!' : '';
+  });
 
   const validateEmail = (value: string) => {
     const trimmed = value.trim();

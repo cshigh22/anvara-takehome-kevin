@@ -47,7 +47,7 @@ export function AdSlotCard({ adSlot }: AdSlotCardProps) {
   useEffect(() => {
     if (updateState?.success && updateState !== prevUpdateStateRef.current && editOpen) {
       toast.success('Ad slot updated successfully');
-      closeEdit();
+      queueMicrotask(closeEdit);
     }
     if (updateState?.error && updateState !== prevUpdateStateRef.current) {
       toast.error(updateState.error);
@@ -58,7 +58,7 @@ export function AdSlotCard({ adSlot }: AdSlotCardProps) {
   useEffect(() => {
     if (deleteState?.success && deleteState !== prevDeleteStateRef.current) {
       toast.success('Ad slot deleted successfully');
-      if (deleteConfirm) closeDeleteConfirm();
+      if (deleteConfirm) queueMicrotask(closeDeleteConfirm);
     }
     if (deleteState?.error && deleteState !== prevDeleteStateRef.current) {
       toast.error(deleteState.error);
