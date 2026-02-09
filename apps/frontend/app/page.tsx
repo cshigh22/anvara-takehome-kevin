@@ -15,9 +15,8 @@ export default async function Home() {
 
   if (session?.user) {
     const roleData = await getUserRole(session.user.id);
-    if (roleData.role === 'sponsor' || roleData.role === 'publisher') {
-      redirect('/dashboard');
-    }
+    if (roleData.role === 'sponsor') redirect('/dashboard/sponsor');
+    if (roleData.role === 'publisher') redirect('/dashboard/publisher');
   }
 
   return (
