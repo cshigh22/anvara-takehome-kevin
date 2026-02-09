@@ -159,18 +159,31 @@ export function CampaignCard({ campaign }: CampaignCardProps) {
       </div>
 
       {editOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50" aria-modal="true">
-          <div className="max-h-[90vh] w-full max-w-md overflow-y-auto rounded-lg bg-[--color-background] p-6 shadow-lg">
-            <h2 className="mb-4 text-lg font-semibold">Edit Campaign</h2>
-            <form action={updateFormAction} className="space-y-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm" aria-modal="true">
+          <div className="relative max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-lg border border-cyan-400/50 bg-[--color-background] p-6 shadow-[0_0_30px_rgba(34,211,238,0.25)] ring-1 ring-cyan-400/30">
+            <div className="mb-6 flex items-center justify-between">
+              <h2 className="text-lg font-semibold">Edit Campaign</h2>
+              <button
+                type="button"
+                onClick={closeEdit}
+                aria-label="Close"
+                className="rounded p-1 text-[--color-muted] transition-colors hover:bg-[--color-border] hover:text-[--color-foreground]"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M18 6 6 18" />
+                  <path d="m6 6 12 12" />
+                </svg>
+              </button>
+            </div>
+            <form action={updateFormAction} className="space-y-5">
               <input type="hidden" name="id" value={campaign.id} />
               {updateState?.error && (
-                <div className="rounded border border-red-200 bg-red-50 p-2 text-sm text-red-600">
+                <div className="rounded border border-red-200 bg-red-50 p-3 text-sm text-red-600">
                   {updateState.error}
                 </div>
               )}
               <div>
-                <label htmlFor={`edit-name-${campaign.id}`} className="mb-1 block text-sm font-medium">
+                <label htmlFor={`edit-name-${campaign.id}`} className="mb-2 block text-sm font-medium">
                   Name *
                 </label>
                 <input
@@ -178,14 +191,14 @@ export function CampaignCard({ campaign }: CampaignCardProps) {
                   name="name"
                   defaultValue={campaign.name}
                   required
-                  className="w-full rounded border border-[--color-border] px-3 py-2 text-sm"
+                  className="w-full rounded-lg border border-[--color-border] px-3 py-2.5 text-sm"
                 />
                 {updateState?.fieldErrors?.name && (
-                  <p className="mt-1 text-xs text-red-600">{updateState.fieldErrors.name}</p>
+                  <p className="mt-1.5 text-xs text-red-600">{updateState.fieldErrors.name}</p>
                 )}
               </div>
               <div>
-                <label htmlFor={`edit-description-${campaign.id}`} className="mb-1 block text-sm font-medium">
+                <label htmlFor={`edit-description-${campaign.id}`} className="mb-2 block text-sm font-medium">
                   Description
                 </label>
                 <textarea
@@ -193,47 +206,55 @@ export function CampaignCard({ campaign }: CampaignCardProps) {
                   name="description"
                   defaultValue={campaign.description ?? ''}
                   rows={2}
-                  className="w-full rounded border border-[--color-border] px-3 py-2 text-sm"
+                  className="w-full rounded-lg border border-[--color-border] px-3 py-2.5 text-sm"
                 />
-              </div>
-              <div>
-                <label htmlFor={`edit-budget-${campaign.id}`} className="mb-1 block text-sm font-medium">
-                  Budget *
-                </label>
-                <input
-                  id={`edit-budget-${campaign.id}`}
-                  name="budget"
-                  type="number"
-                  step="0.01"
-                  min={0.01}
-                  defaultValue={campaign.budget}
-                  required
-                  className="w-full rounded border border-[--color-border] px-3 py-2 text-sm"
-                />
-                {updateState?.fieldErrors?.budget && (
-                  <p className="mt-1 text-xs text-red-600">{updateState.fieldErrors.budget}</p>
-                )}
-              </div>
-              <div>
-                <label htmlFor={`edit-spent-${campaign.id}`} className="mb-1 block text-sm font-medium">
-                  Spent
-                </label>
-                <input
-                  id={`edit-spent-${campaign.id}`}
-                  name="spent"
-                  type="number"
-                  step="0.01"
-                  min={0}
-                  defaultValue={campaign.spent}
-                  className="w-full rounded border border-[--color-border] px-3 py-2 text-sm"
-                />
-                {updateState?.fieldErrors?.spent && (
-                  <p className="mt-1 text-xs text-red-600">{updateState.fieldErrors.spent}</p>
-                )}
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label htmlFor={`edit-startDate-${campaign.id}`} className="mb-1 block text-sm font-medium">
+                  <label htmlFor={`edit-budget-${campaign.id}`} className="mb-2 block text-sm font-medium">
+                    Budget *
+                  </label>
+                  <div className="relative">
+                    <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-sm text-[--color-muted]">$</span>
+                    <input
+                      id={`edit-budget-${campaign.id}`}
+                      name="budget"
+                      type="number"
+                      step="0.01"
+                      min={0.01}
+                      defaultValue={campaign.budget}
+                      required
+                      className="w-full rounded-lg border border-[--color-border] pl-7 pr-3 py-2.5 text-sm"
+                    />
+                  </div>
+                  {updateState?.fieldErrors?.budget && (
+                    <p className="mt-1.5 text-xs text-red-600">{updateState.fieldErrors.budget}</p>
+                  )}
+                </div>
+                <div>
+                  <label htmlFor={`edit-spent-${campaign.id}`} className="mb-2 block text-sm font-medium">
+                    Spent
+                  </label>
+                  <div className="relative">
+                    <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-sm text-[--color-muted]">$</span>
+                    <input
+                      id={`edit-spent-${campaign.id}`}
+                      name="spent"
+                      type="number"
+                      step="0.01"
+                      min={0}
+                      defaultValue={campaign.spent}
+                      className="w-full rounded-lg border border-[--color-border] pl-7 pr-3 py-2.5 text-sm"
+                    />
+                  </div>
+                  {updateState?.fieldErrors?.spent && (
+                    <p className="mt-1.5 text-xs text-red-600">{updateState.fieldErrors.spent}</p>
+                  )}
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label htmlFor={`edit-startDate-${campaign.id}`} className="mb-2 block text-sm font-medium">
                     Start date
                   </label>
                   <input
@@ -241,11 +262,11 @@ export function CampaignCard({ campaign }: CampaignCardProps) {
                     name="startDate"
                     type="date"
                     defaultValue={formatDateForInput(campaign.startDate)}
-                    className="w-full rounded border border-[--color-border] px-3 py-2 text-sm"
+                    className="w-full rounded-lg border border-[--color-border] px-3 py-2.5 text-sm"
                   />
                 </div>
                 <div>
-                  <label htmlFor={`edit-endDate-${campaign.id}`} className="mb-1 block text-sm font-medium">
+                  <label htmlFor={`edit-endDate-${campaign.id}`} className="mb-2 block text-sm font-medium">
                     End date
                   </label>
                   <input
@@ -253,22 +274,22 @@ export function CampaignCard({ campaign }: CampaignCardProps) {
                     name="endDate"
                     type="date"
                     defaultValue={formatDateForInput(campaign.endDate)}
-                    className="w-full rounded border border-[--color-border] px-3 py-2 text-sm"
+                    className="w-full rounded-lg border border-[--color-border] px-3 py-2.5 text-sm"
                   />
                   {updateState?.fieldErrors?.endDate && (
-                    <p className="mt-1 text-xs text-red-600">{updateState.fieldErrors.endDate}</p>
+                    <p className="mt-1.5 text-xs text-red-600">{updateState.fieldErrors.endDate}</p>
                   )}
                 </div>
               </div>
               <div>
-                <label htmlFor={`edit-status-${campaign.id}`} className="mb-1 block text-sm font-medium">
+                <label htmlFor={`edit-status-${campaign.id}`} className="mb-2 block text-sm font-medium">
                   Status
                 </label>
                 <select
                   id={`edit-status-${campaign.id}`}
                   name="status"
                   defaultValue={campaign.status}
-                  className="w-full rounded border border-[--color-border] px-3 py-2 text-sm"
+                  className="w-full rounded-lg border border-[--color-border] px-3 py-2.5 text-sm"
                 >
                   {CAMPAIGN_STATUSES.map((s) => (
                     <option key={s} value={s}>
@@ -277,65 +298,73 @@ export function CampaignCard({ campaign }: CampaignCardProps) {
                   ))}
                 </select>
                 {updateState?.fieldErrors?.status && (
-                  <p className="mt-1 text-xs text-red-600">{updateState.fieldErrors.status}</p>
+                  <p className="mt-1.5 text-xs text-red-600">{updateState.fieldErrors.status}</p>
                 )}
               </div>
-              <div>
-                <label htmlFor={`edit-cpmRate-${campaign.id}`} className="mb-1 block text-sm font-medium">
-                  CPM rate
-                </label>
-                <input
-                  id={`edit-cpmRate-${campaign.id}`}
-                  name="cpmRate"
-                  type="number"
-                  step="0.01"
-                  min={0}
-                  defaultValue={campaign.cpmRate ?? ''}
-                  className="w-full rounded border border-[--color-border] px-3 py-2 text-sm"
-                />
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label htmlFor={`edit-cpmRate-${campaign.id}`} className="mb-2 block text-sm font-medium">
+                    CPM rate
+                  </label>
+                  <div className="relative">
+                    <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-sm text-[--color-muted]">$</span>
+                    <input
+                      id={`edit-cpmRate-${campaign.id}`}
+                      name="cpmRate"
+                      type="number"
+                      step="0.01"
+                      min={0}
+                      defaultValue={campaign.cpmRate ?? ''}
+                      className="w-full rounded-lg border border-[--color-border] pl-7 pr-3 py-2.5 text-sm"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label htmlFor={`edit-cpcRate-${campaign.id}`} className="mb-2 block text-sm font-medium">
+                    CPC rate
+                  </label>
+                  <div className="relative">
+                    <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-sm text-[--color-muted]">$</span>
+                    <input
+                      id={`edit-cpcRate-${campaign.id}`}
+                      name="cpcRate"
+                      type="number"
+                      step="0.01"
+                      min={0}
+                      defaultValue={campaign.cpcRate ?? ''}
+                      className="w-full rounded-lg border border-[--color-border] pl-7 pr-3 py-2.5 text-sm"
+                    />
+                  </div>
+                </div>
               </div>
               <div>
-                <label htmlFor={`edit-cpcRate-${campaign.id}`} className="mb-1 block text-sm font-medium">
-                  CPC rate
-                </label>
-                <input
-                  id={`edit-cpcRate-${campaign.id}`}
-                  name="cpcRate"
-                  type="number"
-                  step="0.01"
-                  min={0}
-                  defaultValue={campaign.cpcRate ?? ''}
-                  className="w-full rounded border border-[--color-border] px-3 py-2 text-sm"
-                />
-              </div>
-              <div>
-                <label htmlFor={`edit-targetCategories-${campaign.id}`} className="mb-1 block text-sm font-medium">
+                <label htmlFor={`edit-targetCategories-${campaign.id}`} className="mb-2 block text-sm font-medium">
                   Target categories (comma-separated)
                 </label>
                 <input
                   id={`edit-targetCategories-${campaign.id}`}
                   name="targetCategories"
                   defaultValue={Array.isArray(campaign.targetCategories) ? campaign.targetCategories.join(', ') : ''}
-                  className="w-full rounded border border-[--color-border] px-3 py-2 text-sm"
+                  className="w-full rounded-lg border border-[--color-border] px-3 py-2.5 text-sm"
                 />
               </div>
               <div>
-                <label htmlFor={`edit-targetRegions-${campaign.id}`} className="mb-1 block text-sm font-medium">
+                <label htmlFor={`edit-targetRegions-${campaign.id}`} className="mb-2 block text-sm font-medium">
                   Target regions (comma-separated)
                 </label>
                 <input
                   id={`edit-targetRegions-${campaign.id}`}
                   name="targetRegions"
                   defaultValue={Array.isArray(campaign.targetRegions) ? campaign.targetRegions.join(', ') : ''}
-                  className="w-full rounded border border-[--color-border] px-3 py-2 text-sm"
+                  className="w-full rounded-lg border border-[--color-border] px-3 py-2.5 text-sm"
                 />
               </div>
-              <div className="flex justify-end gap-2 pt-2">
-                <button type="button" onClick={closeEdit} className="rounded border px-4 py-2 text-sm">
+              <div className="flex justify-end gap-3 pt-4">
+                <button type="button" onClick={closeEdit} className="rounded-lg border border-[--color-border] px-4 py-2.5 text-sm transition-colors hover:bg-[--color-border]/50">
                   Cancel
                 </button>
                 <SubmitButton
-                  className="rounded bg-[--color-primary] px-4 py-2 text-sm font-medium text-white hover:bg-[--color-primary-hover]"
+                  className="rounded-lg bg-cyan-500 px-4 py-2.5 text-sm font-medium text-white hover:bg-cyan-600"
                 >
                   Save
                 </SubmitButton>

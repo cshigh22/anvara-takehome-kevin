@@ -136,18 +136,31 @@ export function AdSlotCard({ adSlot }: AdSlotCardProps) {
       </div>
 
       {editOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50" aria-modal="true">
-          <div className="w-full max-w-md rounded-lg bg-[--color-background] p-6 shadow-lg">
-            <h2 className="mb-4 text-lg font-semibold">Edit Ad Slot</h2>
-            <form action={updateFormAction} className="space-y-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm" aria-modal="true">
+          <div className="relative w-full max-w-lg rounded-lg border border-cyan-400/50 bg-[--color-background] p-6 shadow-[0_0_30px_rgba(34,211,238,0.25)] ring-1 ring-cyan-400/30">
+            <div className="mb-6 flex items-center justify-between">
+              <h2 className="text-lg font-semibold">Edit Ad Slot</h2>
+              <button
+                type="button"
+                onClick={closeEdit}
+                aria-label="Close"
+                className="rounded p-1 text-[--color-muted] transition-colors hover:bg-[--color-border] hover:text-[--color-foreground]"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M18 6 6 18" />
+                  <path d="m6 6 12 12" />
+                </svg>
+              </button>
+            </div>
+            <form action={updateFormAction} className="space-y-5">
               <input type="hidden" name="id" value={adSlot.id} />
               {updateState?.error && (
-                <div className="rounded border border-red-200 bg-red-50 p-2 text-sm text-red-600">
+                <div className="rounded border border-red-200 bg-red-50 p-3 text-sm text-red-600">
                   {updateState.error}
                 </div>
               )}
               <div>
-                <label htmlFor={`edit-name-${adSlot.id}`} className="mb-1 block text-sm font-medium">
+                <label htmlFor={`edit-name-${adSlot.id}`} className="mb-2 block text-sm font-medium">
                   Name *
                 </label>
                 <input
@@ -155,14 +168,14 @@ export function AdSlotCard({ adSlot }: AdSlotCardProps) {
                   name="name"
                   defaultValue={adSlot.name}
                   required
-                  className="w-full rounded border border-[--color-border] px-3 py-2 text-sm"
+                  className="w-full rounded-lg border border-[--color-border] px-3 py-2.5 text-sm"
                 />
                 {updateState?.fieldErrors?.name && (
-                  <p className="mt-1 text-xs text-red-600">{updateState.fieldErrors.name}</p>
+                  <p className="mt-1.5 text-xs text-red-600">{updateState.fieldErrors.name}</p>
                 )}
               </div>
               <div>
-                <label htmlFor={`edit-description-${adSlot.id}`} className="mb-1 block text-sm font-medium">
+                <label htmlFor={`edit-description-${adSlot.id}`} className="mb-2 block text-sm font-medium">
                   Description
                 </label>
                 <textarea
@@ -170,11 +183,11 @@ export function AdSlotCard({ adSlot }: AdSlotCardProps) {
                   name="description"
                   defaultValue={adSlot.description ?? ''}
                   rows={2}
-                  className="w-full rounded border border-[--color-border] px-3 py-2 text-sm"
+                  className="w-full rounded-lg border border-[--color-border] px-3 py-2.5 text-sm"
                 />
               </div>
               <div>
-                <label htmlFor={`edit-type-${adSlot.id}`} className="mb-1 block text-sm font-medium">
+                <label htmlFor={`edit-type-${adSlot.id}`} className="mb-2 block text-sm font-medium">
                   Type *
                 </label>
                 <select
@@ -182,7 +195,7 @@ export function AdSlotCard({ adSlot }: AdSlotCardProps) {
                   name="type"
                   defaultValue={adSlot.type}
                   required
-                  className="w-full rounded border border-[--color-border] px-3 py-2 text-sm"
+                  className="w-full rounded-lg border border-[--color-border] px-3 py-2.5 text-sm"
                 >
                   {AD_SLOT_TYPES.map((t) => (
                     <option key={t} value={t}>
@@ -191,92 +204,106 @@ export function AdSlotCard({ adSlot }: AdSlotCardProps) {
                   ))}
                 </select>
                 {updateState?.fieldErrors?.type && (
-                  <p className="mt-1 text-xs text-red-600">{updateState.fieldErrors.type}</p>
+                  <p className="mt-1.5 text-xs text-red-600">{updateState.fieldErrors.type}</p>
                 )}
               </div>
               <div>
-                <label htmlFor={`edit-position-${adSlot.id}`} className="mb-1 block text-sm font-medium">
+                <label htmlFor={`edit-position-${adSlot.id}`} className="mb-2 block text-sm font-medium">
                   Position
                 </label>
                 <input
                   id={`edit-position-${adSlot.id}`}
                   name="position"
                   defaultValue={adSlot.position ?? ''}
-                  className="w-full rounded border border-[--color-border] px-3 py-2 text-sm"
+                  className="w-full rounded-lg border border-[--color-border] px-3 py-2.5 text-sm"
                 />
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label htmlFor={`edit-width-${adSlot.id}`} className="mb-1 block text-sm font-medium">
+                  <label htmlFor={`edit-width-${adSlot.id}`} className="mb-2 block text-sm font-medium">
                     Width
                   </label>
-                  <input
-                    id={`edit-width-${adSlot.id}`}
-                    name="width"
-                    type="number"
-                    min={1}
-                    defaultValue={adSlot.width ?? ''}
-                    className="w-full rounded border border-[--color-border] px-3 py-2 text-sm"
-                  />
+                  <div className="relative">
+                    <input
+                      id={`edit-width-${adSlot.id}`}
+                      name="width"
+                      type="number"
+                      min={1}
+                      defaultValue={adSlot.width ?? ''}
+                      className="w-full rounded-lg border border-[--color-border] px-3 py-2.5 pr-10 text-sm"
+                    />
+                    <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-sm text-[--color-muted]">px</span>
+                  </div>
                   {updateState?.fieldErrors?.width && (
-                    <p className="mt-1 text-xs text-red-600">{updateState.fieldErrors.width}</p>
+                    <p className="mt-1.5 text-xs text-red-600">{updateState.fieldErrors.width}</p>
                   )}
                 </div>
                 <div>
-                  <label htmlFor={`edit-height-${adSlot.id}`} className="mb-1 block text-sm font-medium">
+                  <label htmlFor={`edit-height-${adSlot.id}`} className="mb-2 block text-sm font-medium">
                     Height
                   </label>
-                  <input
-                    id={`edit-height-${adSlot.id}`}
-                    name="height"
-                    type="number"
-                    min={1}
-                    defaultValue={adSlot.height ?? ''}
-                    className="w-full rounded border border-[--color-border] px-3 py-2 text-sm"
-                  />
+                  <div className="relative">
+                    <input
+                      id={`edit-height-${adSlot.id}`}
+                      name="height"
+                      type="number"
+                      min={1}
+                      defaultValue={adSlot.height ?? ''}
+                      className="w-full rounded-lg border border-[--color-border] px-3 py-2.5 pr-10 text-sm"
+                    />
+                    <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-sm text-[--color-muted]">px</span>
+                  </div>
                   {updateState?.fieldErrors?.height && (
-                    <p className="mt-1 text-xs text-red-600">{updateState.fieldErrors.height}</p>
+                    <p className="mt-1.5 text-xs text-red-600">{updateState.fieldErrors.height}</p>
                   )}
                 </div>
               </div>
-              <div>
-                <label htmlFor={`edit-basePrice-${adSlot.id}`} className="mb-1 block text-sm font-medium">
-                  Base price (USD/mo) *
-                </label>
-                <input
-                  id={`edit-basePrice-${adSlot.id}`}
-                  name="basePrice"
-                  type="number"
-                  step="0.01"
-                  min={0.01}
-                  defaultValue={adSlot.basePrice}
-                  required
-                  className="w-full rounded border border-[--color-border] px-3 py-2 text-sm"
-                />
-                {updateState?.fieldErrors?.basePrice && (
-                  <p className="mt-1 text-xs text-red-600">{updateState.fieldErrors.basePrice}</p>
-                )}
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label htmlFor={`edit-basePrice-${adSlot.id}`} className="mb-2 block text-sm font-medium">
+                    Base price (USD/mo) *
+                  </label>
+                  <div className="relative">
+                    <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-sm text-[--color-muted]">$</span>
+                    <input
+                      id={`edit-basePrice-${adSlot.id}`}
+                      name="basePrice"
+                      type="number"
+                      step="0.01"
+                      min={0.01}
+                      defaultValue={adSlot.basePrice}
+                      required
+                      className="w-full rounded-lg border border-[--color-border] pl-7 pr-3 py-2.5 text-sm"
+                    />
+                  </div>
+                  {updateState?.fieldErrors?.basePrice && (
+                    <p className="mt-1.5 text-xs text-red-600">{updateState.fieldErrors.basePrice}</p>
+                  )}
+                </div>
+                <div>
+                  <label htmlFor={`edit-cpmFloor-${adSlot.id}`} className="mb-2 block text-sm font-medium">
+                    CPM floor (optional)
+                  </label>
+                  <div className="relative">
+                    <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-sm text-[--color-muted]">$</span>
+                    <input
+                      id={`edit-cpmFloor-${adSlot.id}`}
+                      name="cpmFloor"
+                      type="number"
+                      step="0.01"
+                      min={0}
+                      defaultValue={adSlot.cpmFloor ?? ''}
+                      className="w-full rounded-lg border border-[--color-border] pl-7 pr-3 py-2.5 text-sm"
+                    />
+                  </div>
+                </div>
               </div>
-              <div>
-                <label htmlFor={`edit-cpmFloor-${adSlot.id}`} className="mb-1 block text-sm font-medium">
-                  CPM floor (optional)
-                </label>
-                <input
-                  id={`edit-cpmFloor-${adSlot.id}`}
-                  name="cpmFloor"
-                  type="number"
-                  step="0.01"
-                  min={0}
-                  defaultValue={adSlot.cpmFloor ?? ''}
-                  className="w-full rounded border border-[--color-border] px-3 py-2 text-sm"
-                />
-              </div>
-              <div className="flex justify-end gap-2 pt-2">
-                <button type="button" onClick={closeEdit} className="rounded border px-4 py-2 text-sm">
+              <div className="flex justify-end gap-3 pt-4">
+                <button type="button" onClick={closeEdit} className="rounded-lg border border-[--color-border] px-4 py-2.5 text-sm transition-colors hover:bg-[--color-border]/50">
                   Cancel
                 </button>
                 <SubmitButton
-                  className="rounded bg-[--color-primary] px-4 py-2 text-sm font-medium text-white hover:bg-[--color-primary-hover]"
+                  className="rounded-lg bg-cyan-500 px-4 py-2.5 text-sm font-medium text-white hover:bg-cyan-600"
                 >
                   Save
                 </SubmitButton>
