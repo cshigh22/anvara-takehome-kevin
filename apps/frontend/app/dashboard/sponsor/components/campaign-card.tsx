@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { useFormState } from 'react-dom';
+import { useActionState } from 'react';
 import { toast } from 'sonner';
 import { updateCampaignAction, deleteCampaignAction, type SponsorFormState } from '../actions';
 import { SubmitButton } from './submit-button';
@@ -44,8 +44,8 @@ function formatDateForInput(dateStr: string) {
 export function CampaignCard({ campaign }: CampaignCardProps) {
   const [editOpen, setEditOpen] = useState(false);
   const [deleteConfirm, setDeleteConfirm] = useState(false);
-  const [updateState, updateFormAction] = useFormState(updateCampaignAction, emptyFormState);
-  const [deleteState, deleteFormAction] = useFormState(deleteCampaignAction, emptyFormState);
+  const [updateState, updateFormAction] = useActionState(updateCampaignAction, emptyFormState);
+  const [deleteState, deleteFormAction] = useActionState(deleteCampaignAction, emptyFormState);
 
   const progress =
     campaign.budget > 0 ? (Number(campaign.spent) / Number(campaign.budget)) * 100 : 0;

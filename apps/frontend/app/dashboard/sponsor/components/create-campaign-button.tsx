@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { useFormState } from 'react-dom';
+import { useActionState } from 'react';
 import { toast } from 'sonner';
 import { createCampaignAction, type SponsorFormState } from '../actions';
 import { SubmitButton } from './submit-button';
@@ -11,7 +11,7 @@ const initialState: SponsorFormState = {};
 export function CreateCampaignButton() {
   const [open, setOpen] = useState(false);
   const [formKey, setFormKey] = useState(0);
-  const [state, formAction] = useFormState(createCampaignAction, initialState);
+  const [state, formAction] = useActionState(createCampaignAction, initialState);
 
   const closeModal = useCallback(() => {
     setOpen(false);

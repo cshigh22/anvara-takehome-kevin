@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { useFormState } from 'react-dom';
+import { useActionState } from 'react';
 import { toast } from 'sonner';
 import { updateAdSlotAction, deleteAdSlotAction, type PublisherFormState } from '../actions';
 import { SubmitButton } from './submit-button';
@@ -35,8 +35,8 @@ const emptyFormState: PublisherFormState = {};
 export function AdSlotCard({ adSlot }: AdSlotCardProps) {
   const [editOpen, setEditOpen] = useState(false);
   const [deleteConfirm, setDeleteConfirm] = useState(false);
-  const [updateState, updateFormAction] = useFormState(updateAdSlotAction, emptyFormState);
-  const [deleteState, deleteFormAction] = useFormState(deleteAdSlotAction, emptyFormState);
+  const [updateState, updateFormAction] = useActionState(updateAdSlotAction, emptyFormState);
+  const [deleteState, deleteFormAction] = useActionState(deleteAdSlotAction, emptyFormState);
 
   const closeEdit = () => setEditOpen(false);
   const closeDeleteConfirm = () => setDeleteConfirm(false);

@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { useFormState } from 'react-dom';
+import { useActionState } from 'react';
 import { toast } from 'sonner';
 import {
   createAdSlotAction,
@@ -15,7 +15,7 @@ const initialState: PublisherFormState = {};
 export function CreateAdSlotButton() {
   const [open, setOpen] = useState(false);
   const [formKey, setFormKey] = useState(0);
-  const [state, formAction] = useFormState(createAdSlotAction, initialState);
+  const [state, formAction] = useActionState(createAdSlotAction, initialState);
 
   const closeModal = useCallback(() => {
     setOpen(false);
